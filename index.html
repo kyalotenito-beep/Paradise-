@@ -633,9 +633,40 @@ function showPhoto() {
   document.getElementById("book-count").textContent = (current + 1) + " / " + photos.length;
 }
 
-function flip(dir = 1) {
+function flip(dir) {
+  dir = dir || 1;
   if (flipping) return;
   flipping = true;
   var page = document.getElementById("book-page");
   page.style.transition = "transform 0.35s ease-in";
-  page.style.transformOrigin = dir >
+  page.style.transformOrigin = dir > 0 ? "left center" : "right center";
+  page.style.transform = "rotateY(" + (dir > 0 ? -90 : 90) + "deg)";
+  setTimeout(function () {
+    current = (current + dir + photos.length) % photos.length;
+    showPhoto();
+    page.style.transition = "none";
+    page.style.transformOrigin = dir > 0 ? "right center" : "left center";
+    page.style.transform = "rotateY(" + (dir > 0 ? 90 : -90) + "deg)";
+    void page.offsetWidth;
+    page.style.transition = "transform 0.35s ease-out";
+    page.style.transform = "rotateY(0deg)";
+    setTimeout(function () { flipping = false; }, 360);
+  }, 350);
+}
+
+var startX = 0;
+var bookEl = document.getElementById("book");
+if (bookEl) {
+  bookEl.addEventListener("touchstart", function (e) {
+    startX = e.changedTouches[0].clientX;
+  });
+  bookEl.addEventListener("touchend", function (e) {
+    var diff = e.changedTouches[0].clientX - startX;
+    if (diff < -40) flip(1);
+    if (diff > 40) flip(-1);
+  });
+}
+</script>
+
+</body>
+</html>
