@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paradise Restaurant, Bar and Accommodation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ochre: #A8432A;
+    --yellow: #F2B705;
+    --cream: #FFF8E7;
+    --brown: #3B2A20;
+  }
+  * { box-sizing: border-box; }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+    -webkit-text-size-adjust: 100%;
+  }
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--brown);
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+  }
+  img, svg { max-width: 100%; }
+  img { display: block; height: auto; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header and three-line menu */
+  header {
+    width: 100%;
+    background: var(--ochre);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .header-inner {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand svg { flex-shrink: 0; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand-text strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--cream);
+  }
+  .brand-text small {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+  .menu-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .menu-btn span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: var(--yellow);
+    border-radius: 2px;
+  }
+  nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 230px;
+    flex-direction: column;
+    background: var(--ochre);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
+  nav.open { display: flex; }
+  nav a {
+    display: block;
+    padding: 14px 20px;
+    color: var(--yellow);
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    border-top: 1px solid rgba(255,248,231,0.2);
+    transition: color 0.2s;
+  }
+  nav a:hover { color: #ffffff; }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .btn-yellow { background: var(--yellow); color: var(--brown); }
+  .btn-green { background: #25D366; color: #ffffff; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 22px; }
+
+  /* Hero: video-style moving photo */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--cream);
+    background: #3B2A20;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url('restaurant.jpg') center / cover no-repeat;
+    animation: slowzoom 18s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(59,42,32,0.55), rgba(59,42,32,0.75));
+    z-index: 1;
+  }
+  .hero > div {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    animation: fadeUp 1.4s ease-out both;
+  }
+  .hero h1 {
+    margin: 0 0 12px 0;
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 6vw, 52px);
+    line-height: 1.2;
+  }
+  .hero p { margin: 0; font-size: clamp(16px, 2.5vw, 20px); }
+  @keyframes slowzoom {
+    from { transform: scale(1) translate(0, 0); }
+    to   { transform: scale(1.18) translate(-2%, -1%); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero::before, .hero > div { animation: none; }
+  }
+
+  /* Booking form */
+  #booking-form {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 480px;
+    margin: 24px auto;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  #booking-form h3 { margin: 0 0 8px 0; color: var(--ochre); font-family: 'Playfair Display', serif; }
+  #booking-form input {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--ochre);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+  }
+  #message { margin: 10px 0 0 0; font-weight: 500; }
+  .hidden { display: none; }
+
+  /* Sections */
+  .block { padding: 48px 0; }
+  .block h2 {
+    margin: 0;
+    color: var(--ochre);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 36px);
+  }
+  .block h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--yellow);
+    border-radius: 2px;
+    margin-top: 8px;
+  }
+  .block p { margin: 14px 0 0 0; }
+
+  /* Services */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 18px 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(0,0,0,0.14); }
+  .card .icon { font-size: 32px; }
+  .card p { margin: 6px 0 0 0; font-weight: 500; }
+
+  /* Rooms and events */
+  .rooms {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 22px;
+  }
+  .room {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .room img { width: 100%; height: 200px; object-fit: cover; }
+  .room-info { padding: 14px 16px 18px; }
+  .room-info h3 { margin: 0; color: var(--ochre); font-family: 'Playfair Display', serif; }
+  .price { margin: 4px 0 12px 0; font-weight: 600; }
+
+  /* Menu */
+  .menu-list { max-width: 640px; margin-top: 22px; }
+  .dish {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px dashed var(--ochre);
+    padding: 10px 0;
+  }
+  .dish span:last-child { font-weight: 600; color: var(--ochre); white-space: nowrap; }
+
+  /* Book gallery */
+  .book { max-width: 520px; margin: 22px auto 0; perspective: 1200px; }
+  .book-page {
+    background: #ffffff;
+    padding: 10px 10px 4px 18px;
+    border-radius: 4px 12px 12px 4px;
+    border-left: 8px solid var(--ochre);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    backface-visibility: hidden;
+  }
+  .book-page img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  #book-cap { text-align: center; font-weight: 500; margin: 8px 0 6px 0; }
+  .book-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+  .book-controls span { font-weight: 600; }
+
+  /* Reviews */
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 22px;
+  }
+  .review {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .stars { color: var(--yellow); font-size: 20px; letter-spacing: 2px; }
+  .review p { margin: 8px 0; }
+  .review strong { color: var(--ochre); }
+
+  /* Contact and map */
+  .contact-box {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .contact-box p { margin: 6px 0; }
+  .contact-box a { color: var(--ochre); font-weight: 600; text-decoration: none; }
+  .map-frame {
+    width: 100%;
+    height: 300px;
+    border: 0;
+    border-radius: 12px;
+    margin-top: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  /* Footer, social links and floating button */
+  footer {
+    background: var(--ochre);
+    color: var(--cream);
+    text-align: center;
+    padding: 20px 16px 90px 16px;
+    font-size: 14px;
+  }
+  .social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .social a {
+    background: var(--yellow);
+    color: var(--brown);
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .wa-float {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 200;
+    background: #25D366;
+    color: #ffffff;
+    padding: 12px 18px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  /* Tablets and laptops */
+  @media (min-width: 768px) {
+    .hero { min-height: 80vh; }
+    .block { padding: 72px 0; }
+    footer { padding-bottom: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <svg width="46" height="46" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#F2B705" stroke-width="2"/>
+        <circle cx="24" cy="26" r="8" fill="#F2B705"/>
+        <path d="M24 15v-3M16.2 18.2l-2.1-2.1M31.8 18.2l2.1-2.1M13 26h-3M35 26h3" stroke="#F2B705" stroke-width="2" stroke-linecap="round"/>
+        <path d="M12 36q3-3 6 0t6 0t6 0t6 0" fill="none" stroke="#FFF8E7" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="brand-text">
+        <strong>Paradise</strong>
+        <small>Restaurant · Bar · Stay</small>
+      </div>
+    </div>
+    <button class="menu-btn" aria-label="Open menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="main-nav">
+      <a href="#menu">Menu</a>
+      <a href="#services">Services</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#rooms">Accommodation</a>
+      <a href="#events">Events</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Location</a>
+    </nav>
+  </div>
+</header>
+
+<section id="home" class="hero">
+  <div>
+    <h1>Karibu Paradise Restaurant, Bar and Accommodation</h1>
+    <p>Proudly owned by Master Mind. Come hungry, leave happy: authentic Maasai, Kamba and Luo dishes, a lively bar, comfortable rooms, swimming and horse riding, all in one beautiful place in Narok.</p>
+    <div class="btn-row">
+      <button class="btn btn-yellow" onclick="toggleForm()">Book a table</button>
+      <a class="btn btn-green" href="https://wa.me/254791845472?text=Hello%20Paradise">Chat on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div id="booking-form" class="hidden">
+    <h3>Book a table</h3>
+    <input id="name" placeholder="Your name">
+    <input id="guests" type="number" placeholder="Number of guests">
+    <button class="btn btn-yellow" onclick="confirmBooking()">Send request</button>
+    <p id="message"></p>
+  </div>
+</div>
+
+<section id="about" class="block">
+  <div class="container">
+    <h2>About Paradise</h2>
+    <p>Welcome to Paradise, a home away from home owned and run by Master Mind. We started with one idea: to give every guest great food, a warm welcome and a place to unwind.</p>
+    <p>Our kitchen serves traditional Maasai, Kamba and Luo dishes such as ugali, beef, rice, mukimo and pilau, cooked fresh every day. After your meal, enjoy a drink at our bar, take a swim, go horse riding, or book a room and stay the night.</p>
+    <p>Whether you come with family, friends or colleagues, at Paradise you are always among friends. Karibu!</p>
+    <p><strong>Open daily:</strong> 8:00 AM to 10:00 PM</p>
+  </div>
+</section>
+
+<section id="services" class="block">
+  <div class="container">
+    <h2>Our Services</h2>
+    <div class="cards">
+      <div class="card"><div class="icon">🍽️</div><p>Traditional dishes</p></div>
+      <div class="card"><div class="icon">🍹</div><p>Bar</p></div>
+      <div class="card"><div class="icon">🛏️</div><p>Accommodation</p></div>
+      <div class="card"><div class="icon">🏊</div><p>Swimming</p></div>
+      <div class="card"><div class="icon">🐎</div><p>Horse riding</p></div>
+      <div class="card"><div class="icon">🎤</div><p>Events and conferences</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="rooms" class="block">
+  <div class="container">
+    <h2>Rooms and Accommodation</h2>
+    <div class="rooms">
+      <div class="room">
+        <img src="room1.jpg" alt="Standard room at Paradise">
+        <div class="room-info">
+          <h3>Standard Room</h3>
+          <p class="price">KSh 2,500 per night</p>
+          <a class="btn btn-green" href="https://wa.me/254791845472?text=Hello%20Paradise%20I%20would%20like%20to%20book%20a%20standard%20room">Book this room</a>
+        </div>
+      </div>
+      <div class="room">
+        <img src="room2.jpg" alt="Family room at Paradise">
+        <div class="room-info">
+          <h3>Family Room</h3>
+          <p class="price">KSh 4,000 per night</p>
+          <a class="btn btn-green" href="https://wa.me/254791845472?text=Hello%20Paradise%20I%20would%20like%20to%20book%20a%20family%20room">Book this room</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="events" class="block">
+  <div class="container">
+    <h2>Events and Conference Hall</h2>
+    <p>Host your meetings, workshops, weddings, parties and celebrations at Paradise. Our conference hall comes with comfortable seating, catering from our kitchen, and a friendly team to look after your guests making them feel at home.</p>
+    <div class="rooms">
+      <div class="room">
+        <img src="conference.jpg" alt="Conference hall at Paradise">
+        <div class="room-info">
+          <h3>Conference Hall</h3>
+          <p class="price">Contact us for rates</p>
+          <a class="btn btn-green" href="https://wa.me/254791845472?text=Hello%20Paradise%20I%20would%20like%20to%20book%20the%20conference%20hall">Book the conference hall</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="menu" class="block">
+  <div class="container">
+    <h2>Our Menu</h2>
+    <div class="menu-list">
+      <div class="dish"><span>Ugali and Beef</span><span>KSh 350</span></div>
+      <div class="dish"><span>Pilau</span><span>KSh 300</span></div>
+      <div class="dish"><span>Mukimo</span><span>KSh 250</span></div>
+      <div class="dish"><span>Rice and Beef</span><span>KSh 320</span></div>
+      <div class="dish"><span>Fries</span><span>KSh 300</span></div>
+      <div class="dish"><span>Hot Dogs</span><span>KSh 200</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" class="block">
+  <div class="container">
+    <h2>Gallery</h2>
+    <p>Tap Next or swipe to turn the page.</p>
+    <div class="book" id="book">
+      <div class="book-page" id="book-page">
+        <img id="book-img" src="ugali.jpg" alt="Ugali, beef and greens">
+        <p id="book-cap">Ugali, beef and greens</p>
+      </div>
+      <div class="book-controls">
+        <button class="btn btn-yellow" onclick="flip(-1)">‹ Back</button>
+        <span id="book-count">1 / 5</span>
+        <button class="btn btn-yellow" onclick="flip(1)">Next ›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" class="block">
+  <div class="container">
+    <h2>What Our Guests Say</h2>
+    <!-- SAMPLE TEXT: replace with real reviews from real customers -->
+    <div class="reviews">
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>Great food, friendly staff and a lovely place to relax with family.</p>
+        <strong>maggie</strong>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>We held our team meeting here and everything was well organized.</p>
+        <strong>Guest Trian</strong>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★☆</div>
+        <p>The ugali and beef was delicious. We will be back.</p>
+        <strong>master G </strong>
+      </div>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn-green" href="https://wa.me/254791845472?text=Hello%20Paradise%20I%20would%20like%20to%20leave%20a%20review">Leave a review</a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="block">
+  <div class="container">
+    <h2>Location and Contact</h2>
+    <div class="contact-box">
+      <p><strong>Location:</strong> Macedonia, Narok, Kenya</p>
+      <p><strong>Phone:</strong> <a href="tel:+254791845472">0791 845 472</a></p>
+      <p><strong>Open daily:</strong> 8:00 AM to 10:00 PM</p>
+    </div>
+    <iframe class="map-frame" title="Map showing Paradise location" loading="lazy"
+      src="https://maps.google.com/maps?q=Macedonia%2C%20Narok%2C%20Kenya&output=embed"></iframe>
+    <div class="btn-row">
+      <a class="btn btn-yellow" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Macedonia+Narok+Kenya">Get directions</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="social">
+    <a href="https://facebook.com/Paradise" target="_blank" rel="noopener">Facebook</a>
+    <a href="https://instagram.com/paradise" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://tiktok.com/paradise" target="_blank" rel="noopener">TikTok</a>
+  </div>
+  &copy; 2026 Paradise Restaurant, Bar and Accommodation. Owned by Master Mind.
+</footer>
+
+<a class="wa-float" href="https://wa.me/254791845472?text=Hello%20Paradise">💬 WhatsApp</a>
+
+<script>
+function toggleMenu() {
+  document.getElementById("main-nav").classList.toggle("open");
+}
+var navLinks = document.querySelectorAll("#main-nav a");
+for (var i = 0; i < navLinks.length; i++) {
+  navLinks[i].addEventListener("click", function () {
+    document.getElementById("main-nav").classList.remove("open");
+  });
+}
+
+function toggleForm() {
+  var form = document.getElementById("booking-form");
+  form.classList.toggle("hidden");
+  if (!form.classList.contains("hidden")) {
+    form.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+function confirmBooking() {
+  var name = document.getElementById("name").value;
+  var guests = document.getElementById("guests").value;
+
+  if (name=== "" || guests === "") {
+    document.getElementById("message").textContent =
+      "Please enter your name and number of guests.";
+    return;
+  }
+
+  var phone = "254791845472";
+  var text = "Hello Paradise, I would like to book a table. Name: " +
+    name + ". Guests: " + guests + ".";
+
+  document.getElementById("message").textContent =
+    "Opening WhatsApp, please tap send to confirm.";
+  window.location.href = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+}
+
+var photos = [
+  { src: "ugali.jpg", cap: "Ugali, beef" },
+  { src: "rice.jpg", cap: "pilau" },
+  { src: "bar.jpg", cap: " Paradise bar" },
+  { src: "horse.jpg", cap: "Horse riding at Paradise" },
+  { src: "pool.jpg", cap: "swimming pool" }
+];
+var current = 0;
+var flipping = false;
+
+function showPhoto() {
+  document.getElementById("book-img").src = photos[current].src;
+  document.getElementById("book-img").alt = photos[current].cap;
+  document.getElementById("book-cap").textContent = photos[current].cap;
+  document.getElementById("book-count").textContent = (current + 1) + " / " + photos.length;
+}
+
+function flip(dir = 1) {
+  if (flipping) return;
+  flipping = true;
+  var page = document.getElementById("book-page");
+  page.style.transition = "transform 0.35s ease-in";
+  page.style.transformOrigin = dir >
